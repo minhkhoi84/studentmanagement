@@ -30,7 +30,7 @@ Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với 
 
 1. **Clone repository**
    ```bash
-   git clone https://github.com/yourusername/studentmanagement.git
+   git clone https://github.com/minhkhoi84/studentmanagement.git
    cd studentmanagement
    ```
 
