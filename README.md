@@ -1,6 +1,6 @@
 # Student Management System
 
-Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với Tailwind CSS.
+Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với Boostrap.
 
 ## Tính năng
 
@@ -14,7 +14,11 @@ Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với 
 ## Công nghệ sử dụng
 
 - **Backend**: Laravel 11
+<<<<<<< HEAD
 - **Frontend**: Blade Templates, Bootstrap 5
+=======
+- **Frontend**: Blade Templates, Bootstrap
+>>>>>>> b1ff8c3bb7df1ed025eae5c26b2376b029872e81
 - **Database**: SQLite
 - **Authentication**: Laravel Breeze (với Tailwind CSS)
 - **CSS Framework**: Bootstrap 5.0.2 (CDN)
@@ -30,7 +34,7 @@ Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với 
 
 1. **Clone repository**
    ```bash
-   git clone https://github.com/yourusername/studentmanagement.git
+   git clone https://github.com/minhkhoi84/studentmanagement.git
    cd studentmanagement
    ```
 
@@ -100,7 +104,8 @@ Truy cập ứng dụng tại: `http://localhost:8000`
 
 ## Screenshots
 
-*Thêm screenshots của ứng dụng ở đây*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e77f0201-3c6b-4f71-91c5-f9eb88ad037a" />
+
 
 ## Đóng góp
 
@@ -116,9 +121,9 @@ Dự án này được cấp phép theo [MIT License](https://opensource.org/lic
 
 ## Liên hệ
 
-- **Developer**: [Tên của bạn]
-- **Email**: [email@example.com]
-- **GitHub**: [https://github.com/yourusername]
+- **Developer**: [Phạm Minh Khôi]
+- **Email**: [phamminhkhoi804]
+- **GitHub**: [minhkhoi84]
 
 ---
 
