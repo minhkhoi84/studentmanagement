@@ -14,10 +14,10 @@ Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với 
 ## Công nghệ sử dụng
 
 - **Backend**: Laravel 11
-- **Frontend**: Blade Templates, Tailwind CSS
+- **Frontend**: Blade Templates, Bootstrap 5
 - **Database**: SQLite
-- **Authentication**: Laravel Breeze
-- **Icons**: Heroicons
+- **Authentication**: Laravel Breeze (với Tailwind CSS)
+- **CSS Framework**: Bootstrap 5.0.2 (CDN)
 
 ## Cài đặt
 
