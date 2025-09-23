@@ -1,6 +1,6 @@
 # Student Management System
 
-Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với Tailwind CSS.
+Hệ thống quản lý sinh viên được xây dựng bằng Laravel 11 với Boostrap.
 
 ## Tính năng
 
@@ -100,7 +100,8 @@ Truy cập ứng dụng tại: `http://localhost:8000`
 
 ## Screenshots
 
-*Thêm screenshots của ứng dụng ở đây*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e77f0201-3c6b-4f71-91c5-f9eb88ad037a" />
+
 
 ## Đóng góp
 
