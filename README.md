@@ -116,9 +116,9 @@ Dự án này được cấp phép theo [MIT License](https://opensource.org/lic
 
 ## Liên hệ
 
-- **Developer**: [Tên của bạn]
-- **Email**: [email@example.com]
-- **GitHub**: [https://github.com/yourusername]
+- **Developer**: [Phạm Minh Khôi]
+- **Email**: [phamminhkhoi804]
+- **GitHub**: [minhkhoi84]
 
 ---
 
