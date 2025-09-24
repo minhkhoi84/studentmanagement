@@ -136,9 +136,13 @@
                             <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                             <h5 class="text-muted">No recent activity</h5>
                             <p class="text-muted">Start by adding your first student!</p>
-                            <a href="{{ route('students.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Add First Student
-                            </a>
+                            @auth
+                                @if(Auth::user()->hasPermission('them-moi-sinh-vien'))
+                                    <a href="{{ route('students.create') }}" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i> Thêm sinh viên đầu tiên
+                                    </a>
+                                @endif
+                            @endauth
                         </div>
                     @endif
                 </div>

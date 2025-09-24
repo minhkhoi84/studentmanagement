@@ -62,10 +62,12 @@
                     </td>
                     <td>
                         @auth
-                            @if(Auth::user()->role === 'super_admin')
+                            @if(Auth::user()->role === 'super_admin' || Auth::user()->role === 'admin')
                                 <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i> Sửa
                                 </a>
+                            @endif
+                            @if(Auth::user()->role === 'super_admin')
                                 <form action="{{ route('departments.destroy', $department->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa khoa này không?')">
                                     @csrf
                                     @method('DELETE')
@@ -73,7 +75,8 @@
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
                                 </form>
-                            @else
+                            @endif
+                            @if(Auth::user()->role === 'user')
                                 <span class="text-muted">Chỉ xem</span>
                             @endif
                         @endauth

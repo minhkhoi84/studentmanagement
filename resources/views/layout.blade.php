@@ -185,24 +185,20 @@ div.content {
             <i class="fas fa-book-open"></i> Quản môn học
           </a>
           
-          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+          <a class="{{ request()->is('grades*') ? 'active' : '' }}" href="{{ route('grades.index') }}">
             <i class="fas fa-chart-line"></i> Quản lý điểm
           </a>
           
-          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+          <a class="{{ request()->is('attendances*') ? 'active' : '' }}" href="{{ route('attendances.index') }}">
             <i class="fas fa-clipboard-list"></i> Quản lý điểm danh
           </a>
           
-          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+          <a class="{{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">
             <i class="fas fa-users-cog"></i> Thành viên
           </a>
           
-          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+          <a class="{{ request()->is('roles*') ? 'active' : '' }}" href="{{ route('roles.index') }}">
             <i class="fas fa-user-shield"></i> Vai trò thành viên
-          </a>
-          
-          <a href="#" onclick="alert('Chức năng đang phát triển!')">
-            <i class="fas fa-file-alt"></i> Bài viết điều khoản
           </a>
           
       </div>

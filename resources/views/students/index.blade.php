@@ -44,13 +44,13 @@
                                 <div class="col-12 mt-2">
                                     <button class="btn btn-primary"><i class="fas fa-filter"></i> Áp dụng</button>
                                     <a href="{{ route('students.index') }}" class="btn btn-outline-secondary ms-2">Đặt lại</a>
-                                    @auth
-                                        @if(Auth::user()->role === 'super_admin')
-                                            <a href="{{ route('students.create') }}" class="btn btn-success ms-2">
-                                                <i class="fas fa-user-plus"></i> Thêm sinh viên
-                                            </a>
-                                        @endif
-                                    @endauth
+                                        @auth
+                                            @if(Auth::user()->hasPermission('them-moi-sinh-vien'))
+                                                <a href="{{ route('students.create') }}" class="btn btn-success ms-2">
+                                                    <i class="fas fa-user-plus"></i> Thêm sinh viên
+                                                </a>
+                                            @endif
+                                        @endauth
                                 </div>
                             </div>
                         </form>
@@ -81,16 +81,22 @@
                                         <a href="{{ route('students.show', $student->id) }}" class="btn btn-info btn-sm me-1">
                                             <i class="fas fa-eye"></i> Xem
                                         </a>
-                                        <a href="{{ route('students.edit', $student->id) }}" class="btn btn-primary btn-sm me-1">
-                                            <i class="fas fa-edit"></i> Sửa
-                                        </a>
-                                        <form action="{{ route('students.destroy', $student->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên này không?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Xóa
-                                            </button>
-                                        </form>
+                                        @auth
+                                            @if(Auth::user()->hasPermission('chinh-sua-thong-tin-sinh-vien'))
+                                                <a href="{{ route('students.edit', $student->id) }}" class="btn btn-primary btn-sm me-1">
+                                                    <i class="fas fa-edit"></i> Sửa
+                                                </a>
+                                            @endif
+                                            @if(Auth::user()->hasPermission('xoa-sinh-vien'))
+                                                <form action="{{ route('students.destroy', $student->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên này không?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fas fa-trash"></i> Xóa
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
                                     </td>
                                 </tr>
                             @empty
