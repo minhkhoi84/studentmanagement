@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Department extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'code', 'description', 'credits', 'status'
+        'name', 'code', 'description', 'dean', 'status'
     ];
 
     protected $casts = [
-        'credits' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -29,8 +28,7 @@ class Course extends Model
         return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
               ->orWhere('code', 'like', "%{$term}%")
-              ->orWhere('description', 'like', "%{$term}%");
+              ->orWhere('dean', 'like', "%{$term}%");
         });
     }
 }
-

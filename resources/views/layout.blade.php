@@ -13,36 +13,60 @@
 .sidebar {
   margin: 0;
   padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
+  width: 250px;
+  background-color: #2c3e50;
   position: fixed;
   height: 100%;
   overflow: auto;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+/* Sidebar header */
+.sidebar-header {
+  background-color: #34495e;
+  color: white;
+  padding: 20px 15px;
+  text-align: center;
+  border-bottom: 1px solid #1a252f;
+}
+
+.sidebar-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 /* Sidebar links */
 .sidebar a {
   display: block;
-  color: black;
-  padding: 16px;
+  color: #bdc3c7;
+  padding: 12px 20px;
   text-decoration: none;
+  border-bottom: 1px solid #34495e;
+  transition: all 0.3s ease;
+}
+
+.sidebar a i {
+  margin-right: 10px;
+  width: 20px;
 }
 
 /* Active/current link */
 .sidebar a.active {
-  background-color: #04AA6D;
+  background-color: #3498db;
   color: white;
 }
 
 /* Links on mouse-over */
 .sidebar a:hover:not(.active) {
-  background-color: #555;
+  background-color: #34495e;
   color: white;
+  padding-left: 25px;
 }
 
 /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
 div.content {
-  margin-left: 200px;
+  margin-left: 250px;
   padding: 1px 16px;
   height: 1000px;
 }
@@ -91,14 +115,14 @@ div.content {
    
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid p-0">
         <div class="row">
             <div class="col-md-12">
 
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><h2>Student Management Project</h2></a>
+    <a class="navbar-brand" href="#"><h2>Hệ Thống Quản Lý Sinh Viên</h2></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -106,10 +130,10 @@ div.content {
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         @guest
           <li class="nav-item me-2">
-            <a class="btn btn-outline-primary" href="{{ route('login') }}">Login</a>
+            <a class="btn btn-outline-primary" href="{{ route('login') }}">Đăng nhập</a>
           </li>
           <li class="nav-item">
-            <a class="btn btn-primary" href="{{ route('register') }}">Register</a>
+            <a class="btn btn-primary" href="{{ route('register') }}">Đăng ký</a>
           </li>
         @endguest
         @auth
@@ -119,7 +143,7 @@ div.content {
           <li class="nav-item">
             <form method="POST" action="{{ route('logout') }}" style="display: inline;">
               @csrf
-              <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
+              <button class="btn btn-outline-danger btn-sm" type="submit">Đăng xuất</button>
             </form>
           </li>
         @endauth
@@ -131,34 +155,61 @@ div.content {
       </div>
 
 
-      <div class="row">
-      <div class="col-md-3">
-
-        <!-- The sidebar -->
-        <div class="sidebar">
+      <!-- The sidebar -->
+      <div class="sidebar">
+          <div class="sidebar-header">
+            <h4>Quản Lý SV</h4>
+          </div>
+          
           <a class="{{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">
-            <i class="fas fa-home"></i> Home
-          </a>
-          <a class="{{ request()->is('students*') ? 'active' : '' }}" href="{{ route('students.index') }}">
-            <i class="fas fa-users"></i> Students
-          </a>
-          <a class="{{ request()->is('teachers*') ? 'active' : '' }}" href="{{ route('teachers.index') }}">
-            <i class="fas fa-chalkboard-teacher"></i> Teachers
-          </a>
-          <a class="{{ request()->is('courses*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
-            <i class="fas fa-book"></i> Courses
+            <i class="fas fa-home"></i> Trang chủ
           </a>
           
-        </div>
+          <a class="{{ request()->is('departments*') ? 'active' : '' }}" href="{{ route('departments.index') }}">
+            <i class="fas fa-university"></i> Khoa
+          </a>
+          
+          <a class="{{ request()->is('classes*') ? 'active' : '' }}" href="{{ route('classes.index') }}">
+            <i class="fas fa-door-open"></i> Lớp
+          </a>
+          
+          <a class="{{ request()->is('students*') ? 'active' : '' }}" href="{{ route('students.index') }}">
+            <i class="fas fa-user-graduate"></i> Sinh viên
+          </a>
+          
+          <a class="{{ request()->is('teachers*') ? 'active' : '' }}" href="{{ route('teachers.index') }}">
+            <i class="fas fa-chalkboard-teacher"></i> Quản lý giảng viên
+          </a>
+          
+          <a class="{{ request()->is('courses*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+            <i class="fas fa-book-open"></i> Quản môn học
+          </a>
+          
+          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+            <i class="fas fa-chart-line"></i> Quản lý điểm
+          </a>
+          
+          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+            <i class="fas fa-clipboard-list"></i> Quản lý điểm danh
+          </a>
+          
+          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+            <i class="fas fa-users-cog"></i> Thành viên
+          </a>
+          
+          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+            <i class="fas fa-user-shield"></i> Vai trò thành viên
+          </a>
+          
+          <a href="#" onclick="alert('Chức năng đang phát triển!')">
+            <i class="fas fa-file-alt"></i> Bài viết điều khoản
+          </a>
+          
       </div>
-      <div class="col-md-9">    
+      
       <!-- Page content -->
       <div class="content">
-                   @yield('content')
-      </div>
-
-      </div>
-
+        @yield('content')
       </div>
 
     <!-- Bootstrap JS -->
