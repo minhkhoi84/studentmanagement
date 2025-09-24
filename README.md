@@ -104,7 +104,8 @@ Truy cập ứng dụng tại: `http://localhost:8000`
 
 ## Screenshots
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e77f0201-3c6b-4f71-91c5-f9eb88ad037a" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/abed3572-8eab-476c-84ca-4d6ff2611c1d" />
+
 
 
 ## Đóng góp
