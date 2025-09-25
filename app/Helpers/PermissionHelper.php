@@ -24,3 +24,4 @@ class PermissionHelper
         return in_array($user->role, ['super_admin', 'admin', 'user']);
     }
 }
+

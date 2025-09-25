@@ -83,6 +83,11 @@ class AttendanceController extends Controller
         return redirect()->route('attendances.index')->with('success', 'Điểm danh đã được cập nhật thành công');
     }
 
+    public function show(Attendance $attendance): View
+    {
+        return view('attendances.show', compact('attendance'));
+    }
+
     public function destroy(Attendance $attendance): RedirectResponse
     {
         $attendance->delete();

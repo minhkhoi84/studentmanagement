@@ -82,6 +82,11 @@ class GradeController extends Controller
         return redirect()->route('grades.index')->with('success', 'Điểm đã được cập nhật thành công');
     }
 
+    public function show(Grade $grade): View
+    {
+        return view('grades.show', compact('grade'));
+    }
+
     public function destroy(Grade $grade): RedirectResponse
     {
         $grade->delete();

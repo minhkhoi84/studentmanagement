@@ -12,6 +12,17 @@ class Student extends Model
     
     protected $table = 'students';
     protected $primaryKey = 'id';
+
+    // Constants for status values
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_GRADUATED = 'graduated';
+    public const STATUS_SUSPENDED = 'suspended';
+
+    // Constants for gender values
+    public const GENDER_MALE = 'male';
+    public const GENDER_FEMALE = 'female';
+    public const GENDER_OTHER = 'other';
     
     /**
      * The attributes that are mass assignable.
@@ -96,13 +107,13 @@ class Student extends Model
     /**
      * Get the student's status badge color.
      */
-    public function getStatusBadgeColorAttribute()
+    public function getStatusBadgeColorAttribute(): string
     {
         return match($this->status) {
-            'active' => 'success',
-            'inactive' => 'secondary',
-            'graduated' => 'primary',
-            'suspended' => 'danger',
+            self::STATUS_ACTIVE => 'success',
+            self::STATUS_INACTIVE => 'secondary',
+            self::STATUS_GRADUATED => 'primary',
+            self::STATUS_SUSPENDED => 'danger',
             default => 'secondary'
         };
     }
@@ -110,12 +121,12 @@ class Student extends Model
     /**
      * Get the student's gender display.
      */
-    public function getGenderDisplayAttribute()
+    public function getGenderDisplayAttribute(): string
     {
         return match($this->gender) {
-            'male' => 'Nam',
-            'female' => 'Nữ',
-            'other' => 'Khác',
+            self::GENDER_MALE => 'Nam',
+            self::GENDER_FEMALE => 'Nữ',
+            self::GENDER_OTHER => 'Khác',
             default => 'Không xác định'
         };
     }
@@ -125,7 +136,7 @@ class Student extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('status', 'active');
+        return $query->where('status', self::STATUS_ACTIVE);
     }
 
     /**
@@ -163,5 +174,45 @@ class Student extends Model
     public function scopeByStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    // ========================================
+    // RELATIONSHIPS - Các mối quan hệ dữ liệu
+    // ========================================
+
+    /**
+     * Một sinh viên có nhiều điểm số (grades)
+     * Relationship: One-to-Many
+     */
+    public function grades()
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    /**
+     * Một sinh viên có nhiều bản ghi điểm danh (attendances)
+     * Relationship: One-to-Many
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * Một sinh viên thuộc về một user account
+     * Relationship: One-to-One (thông qua email)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    /**
+     * Một sinh viên thuộc về một lớp học
+     * Relationship: Many-to-One
+     */
+    public function classModel()
+    {
+        return $this->belongsTo(ClassModel::class, 'class', 'name');
     }
 }

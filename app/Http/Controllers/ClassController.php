@@ -65,6 +65,11 @@ class ClassController extends Controller
         return redirect()->route('classes.index')->with('success', 'Lớp đã được cập nhật thành công');
     }
 
+    public function show(ClassModel $class): View
+    {
+        return view('classes.show', compact('class'));
+    }
+
     public function destroy(ClassModel $class): RedirectResponse
     {
         $class->delete();
