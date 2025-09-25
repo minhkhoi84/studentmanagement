@@ -243,7 +243,8 @@ Sau khi chạy seeders, bạn có thể đăng nhập với:
 3. Nhập điểm số hoặc trạng thái điểm danh
 4. Lưu thông tin
 
-![Uploading image.png…]()
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ab019f4d-cc12-4fc3-b9b6-7774284ae2e7" />
+
 
 =======
 ## 🧪 Testing
