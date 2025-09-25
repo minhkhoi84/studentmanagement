@@ -11,19 +11,13 @@ class TeacherController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Teacher::query();
-        if ($request->filled('q')) {
-            $q = $request->string('q');
-            $query->where(function ($sub) use ($q) {
-                $sub->where('name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%")
-                    ->orWhere('phone', 'like', "%{$q}%");
-            });
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
-        }
-        $teachers = $query->orderBy('name')->paginate(10)->withQueryString();
+        $teachers = Teacher::query()
+            ->when($request->filled('q'), fn($query) => $query->search($request->string('q')))
+            ->when($request->filled('status'), fn($query) => $query->where('status', $request->string('status')))
+            ->orderBy('name')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('teachers.index', compact('teachers'));
     }
 
@@ -61,6 +55,11 @@ class TeacherController extends Controller
         ]);
         $teacher->update($validated);
         return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully');
+    }
+
+    public function show(Teacher $teacher): View
+    {
+        return view('teachers.show', compact('teacher'));
     }
 
     public function destroy(Teacher $teacher): RedirectResponse

@@ -27,6 +27,17 @@ class ClassModel extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'class', 'name');
+    }
+
+    public function courses()
+    {
+        // Giả sử có relationship giữa class và courses thông qua students
+        return $this->hasManyThrough(Course::class, Student::class, 'class', 'id', 'name', 'id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

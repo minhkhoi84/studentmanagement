@@ -58,6 +58,11 @@ class DepartmentController extends Controller
         return redirect()->route('departments.index')->with('success', 'Khoa đã được cập nhật thành công');
     }
 
+    public function show(Department $department): View
+    {
+        return view('departments.show', compact('department'));
+    }
+
     public function destroy(Department $department): RedirectResponse
     {
         $department->delete();

@@ -58,6 +58,11 @@ class CourseController extends Controller
         return redirect()->route('courses.index')->with('success', 'Course updated successfully');
     }
 
+    public function show(Course $course): View
+    {
+        return view('courses.show', compact('course'));
+    }
+
     public function destroy(Course $course): RedirectResponse
     {
         $course->delete();
