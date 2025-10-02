@@ -38,3 +38,13 @@ abstract class BaseController extends Controller
         return redirect()->back()->with('error', $message);
     }
 }
+
+
+
+
+
+
+
+
+
+

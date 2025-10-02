@@ -53,7 +53,13 @@
                 @forelse($teachers as $i => $teacher)
                 <tr>
                     <td>{{ $teacher->id }}</td>
-                    <td><strong class="text-primary">{{ $teacher->teacher_code ?? 'GV' . str_pad($teacher->id, 3, '0', STR_PAD_LEFT) }}</strong></td>
+                    <td>
+                        @if($teacher->teacher_code)
+                            <strong class="text-primary">{{ $teacher->teacher_code }}</strong>
+                        @else
+                            <span class="text-muted">GV{{ str_pad($teacher->id, 3, '0', STR_PAD_LEFT) }}</span>
+                        @endif
+                    </td>
                     <td>{{ $teacher->name }}</td>
                     <td>{{ $teacher->phone ?? 'Chưa có' }}</td>
                     <td>{{ $teacher->qualification ?? 'Chưa có' }}</td>

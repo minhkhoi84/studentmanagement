@@ -6,6 +6,10 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () { return view('home'); })->name('home');
@@ -24,34 +28,23 @@ require __DIR__.'/auth.php';
 
 // Protected app routes with proper permissions
 Route::middleware('auth')->group(function () {
-<<<<<<< Updated upstream
-    Route::resource('students', StudentController::class);
-    Route::resource('teachers', TeacherController::class);
-    Route::resource('courses', CourseController::class);
-    Route::resource('departments', DepartmentController::class);
-    Route::resource('classes', ClassController::class);
-=======
     // Student management routes
-    Route::prefix('students')->name('students.')->group(function () {
-        Route::get('/', [StudentController::class, 'index'])->name('index')->middleware('permission:xem-danh-sach-sinh-vien');
-        Route::get('/create', [StudentController::class, 'create'])->name('create')->middleware('permission:them-moi-sinh-vien');
-        Route::post('/', [StudentController::class, 'store'])->name('store')->middleware('permission:them-moi-sinh-vien');
-        Route::get('/{student}', [StudentController::class, 'show'])->name('show')->middleware('permission:xem-danh-sach-sinh-vien');
-        Route::get('/{student}/edit', [StudentController::class, 'edit'])->name('edit')->middleware('permission:chinh-sua-thong-tin-sinh-vien');
-        Route::put('/{student}', [StudentController::class, 'update'])->name('update')->middleware('permission:chinh-sua-thong-tin-sinh-vien');
-        Route::delete('/{student}', [StudentController::class, 'destroy'])->name('destroy')->middleware('permission:xoa-sinh-vien');
-    });
+    Route::get('students', [StudentController::class, 'index'])->name('students.index')->middleware('permission:xem-danh-sach-sinh-vien');
+    Route::get('students/create', [StudentController::class, 'create'])->name('students.create')->middleware('permission:them-moi-sinh-vien');
+    Route::post('students', [StudentController::class, 'store'])->name('students.store')->middleware('permission:them-moi-sinh-vien');
+    Route::get('students/{student}', [StudentController::class, 'show'])->name('students.show')->middleware('permission:xem-danh-sach-sinh-vien');
+    Route::get('students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit')->middleware('permission:chinh-sua-thong-tin-sinh-vien');
+    Route::put('students/{student}', [StudentController::class, 'update'])->name('students.update')->middleware('permission:chinh-sua-thong-tin-sinh-vien');
+    Route::delete('students/{student}', [StudentController::class, 'destroy'])->name('students.destroy')->middleware('permission:xoa-sinh-vien');
     
     // Teacher management routes
-    Route::prefix('teachers')->name('teachers.')->group(function () {
-        Route::get('/', [TeacherController::class, 'index'])->name('index')->middleware('permission:view-teachers');
-        Route::get('/create', [TeacherController::class, 'create'])->name('create')->middleware('permission:create-teachers');
-        Route::post('/', [TeacherController::class, 'store'])->name('store')->middleware('permission:create-teachers');
-        Route::get('/{teacher}', [TeacherController::class, 'show'])->name('show')->middleware('permission:view-teachers');
-        Route::get('/{teacher}/edit', [TeacherController::class, 'edit'])->name('edit')->middleware('permission:edit-teachers');
-        Route::put('/{teacher}', [TeacherController::class, 'update'])->name('update')->middleware('permission:edit-teachers');
-        Route::delete('/{teacher}', [TeacherController::class, 'destroy'])->name('destroy')->middleware('permission:delete-teachers');
-    });
+    Route::get('teachers', [TeacherController::class, 'index'])->name('teachers.index')->middleware('permission:view-teachers');
+    Route::get('teachers/create', [TeacherController::class, 'create'])->name('teachers.create')->middleware('permission:create-teachers');
+    Route::post('teachers', [TeacherController::class, 'store'])->name('teachers.store')->middleware('permission:create-teachers');
+    Route::get('teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show')->middleware('permission:view-teachers');
+    Route::get('teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('teachers.edit')->middleware('permission:edit-teachers');
+    Route::put('teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update')->middleware('permission:edit-teachers');
+    Route::delete('teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy')->middleware('permission:delete-teachers');
     
     // Course management routes
     Route::get('courses', [CourseController::class, 'index'])->name('courses.index')->middleware('permission:xem-danh-sach-mon-hoc');
@@ -63,22 +56,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy')->middleware('permission:xoa-mon-hoc');
     
     // Department management routes
-    Route::get('departments', [DepartmentController::class, 'index'])->name('departments.index')->middleware('permission:view-departments');
-    Route::get('departments/create', [DepartmentController::class, 'create'])->name('departments.create')->middleware('permission:create-departments');
-    Route::post('departments', [DepartmentController::class, 'store'])->name('departments.store')->middleware('permission:create-departments');
-    Route::get('departments/{department}', [DepartmentController::class, 'show'])->name('departments.show')->middleware('permission:view-departments');
-    Route::get('departments/{department}/edit', [DepartmentController::class, 'edit'])->name('departments.edit')->middleware('permission:edit-departments');
-    Route::put('departments/{department}', [DepartmentController::class, 'update'])->name('departments.update')->middleware('permission:edit-departments');
-    Route::delete('departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy')->middleware('permission:delete-departments');
+    Route::get('departments', [DepartmentController::class, 'index'])->name('departments.index')->middleware('permission:xem-danh-sach-khoa');
+    Route::get('departments/create', [DepartmentController::class, 'create'])->name('departments.create')->middleware('permission:them-moi-khoa');
+    Route::post('departments', [DepartmentController::class, 'store'])->name('departments.store')->middleware('permission:them-moi-khoa');
+    Route::get('departments/{department}', [DepartmentController::class, 'show'])->name('departments.show')->middleware('permission:xem-danh-sach-khoa');
+    Route::get('departments/{department}/edit', [DepartmentController::class, 'edit'])->name('departments.edit')->middleware('permission:chinh-sua-khoa');
+    Route::put('departments/{department}', [DepartmentController::class, 'update'])->name('departments.update')->middleware('permission:chinh-sua-khoa');
+    Route::delete('departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy')->middleware('permission:xoa-khoa');
     
     // Class management routes
-    Route::get('classes', [ClassController::class, 'index'])->name('classes.index')->middleware('permission:view-classes');
-    Route::get('classes/create', [ClassController::class, 'create'])->name('classes.create')->middleware('permission:create-classes');
-    Route::post('classes', [ClassController::class, 'store'])->name('classes.store')->middleware('permission:create-classes');
-    Route::get('classes/{class}', [ClassController::class, 'show'])->name('classes.show')->middleware('permission:view-classes');
-    Route::get('classes/{class}/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:edit-classes');
-    Route::put('classes/{class}', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:edit-classes');
-    Route::delete('classes/{class}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:delete-classes');
+    Route::get('classes', [ClassController::class, 'index'])->name('classes.index')->middleware('permission:xem-danh-sach-lop');
+    Route::get('classes/create', [ClassController::class, 'create'])->name('classes.create')->middleware('permission:them-moi-lop');
+    Route::post('classes', [ClassController::class, 'store'])->name('classes.store')->middleware('permission:them-moi-lop');
+    Route::get('classes/{class}', [ClassController::class, 'show'])->name('classes.show')->middleware('permission:xem-danh-sach-lop');
+    Route::get('classes/{class}/edit', [ClassController::class, 'edit'])->name('classes.edit')->middleware('permission:chinh-sua-lop');
+    Route::put('classes/{class}', [ClassController::class, 'update'])->name('classes.update')->middleware('permission:chinh-sua-lop');
+    Route::delete('classes/{class}', [ClassController::class, 'destroy'])->name('classes.destroy')->middleware('permission:xoa-lop');
     
     // Grade management routes
     Route::get('grades', [GradeController::class, 'index'])->name('grades.index')->middleware('permission:view-grades');
@@ -111,7 +104,6 @@ Route::middleware('auth')->group(function () {
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:manage-permissions');
     Route::put('roles/{user}', [RoleController::class, 'update'])->name('roles.update')->middleware('permission:manage-permissions');
     
->>>>>>> Stashed changes
 });
 
 // API Statistics route (không cần auth)

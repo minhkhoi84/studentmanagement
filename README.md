@@ -100,7 +100,7 @@ app/
 - Composer
 - Node.js >= 16.x
 - npm hoặc yarn
-- MySQL
+- SQLite (hoặc MySQL/PostgreSQL)
 
 ## 🚀 Cài đặt và chạy dự án
 

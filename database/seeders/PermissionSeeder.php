@@ -24,16 +24,16 @@ class PermissionSeeder extends Seeder
             ['name' => 'export-excel-danh-sach-sinh-vien', 'display_name' => 'Export Excel danh sách sinh viên', 'group' => 'quan-ly-sinh-vien'],
             
             // Quản lý khoa
-            ['name' => 'quan-ly-danh-sach-khoa', 'display_name' => 'Quản lý danh sách khoa', 'group' => 'quan-ly-khoa'],
-            ['name' => 'them-moi-thong-tin-khoa', 'display_name' => 'Thêm mới thông tin khoa', 'group' => 'quan-ly-khoa'],
-            ['name' => 'chinh-sua-thong-tin-khoa', 'display_name' => 'Chỉnh sửa thông tin khoa', 'group' => 'quan-ly-khoa'],
-            ['name' => 'xoa-thong-tin-khoa', 'display_name' => 'Xóa thông tin khoa', 'group' => 'quan-ly-khoa'],
+            ['name' => 'xem-danh-sach-khoa', 'display_name' => 'Xem danh sách khoa', 'group' => 'quan-ly-khoa'],
+            ['name' => 'them-moi-khoa', 'display_name' => 'Thêm mới khoa', 'group' => 'quan-ly-khoa'],
+            ['name' => 'chinh-sua-khoa', 'display_name' => 'Chỉnh sửa khoa', 'group' => 'quan-ly-khoa'],
+            ['name' => 'xoa-khoa', 'display_name' => 'Xóa khoa', 'group' => 'quan-ly-khoa'],
             
             // Quản lý lớp
-            ['name' => 'quan-ly-danh-sach-lop', 'display_name' => 'Quản lý danh sách lớp', 'group' => 'quan-ly-lop'],
-            ['name' => 'them-thong-tin-lop', 'display_name' => 'Thêm thông tin lớp', 'group' => 'quan-ly-lop'],
-            ['name' => 'chinh-sua-thong-tin-lop', 'display_name' => 'Chỉnh sửa thông tin lớp', 'group' => 'quan-ly-lop'],
-            ['name' => 'xoa-thong-tin-lop', 'display_name' => 'Xóa thông tin lớp', 'group' => 'quan-ly-lop'],
+            ['name' => 'xem-danh-sach-lop', 'display_name' => 'Xem danh sách lớp', 'group' => 'quan-ly-lop'],
+            ['name' => 'them-moi-lop', 'display_name' => 'Thêm mới lớp', 'group' => 'quan-ly-lop'],
+            ['name' => 'chinh-sua-lop', 'display_name' => 'Chỉnh sửa lớp', 'group' => 'quan-ly-lop'],
+            ['name' => 'xoa-lop', 'display_name' => 'Xóa lớp', 'group' => 'quan-ly-lop'],
             
             // Quản lý thành viên
             ['name' => 'quan-ly-danh-sach-thanh-vien', 'display_name' => 'Quản lý danh sách thành viên', 'group' => 'quan-ly-thanh-vien'],
@@ -52,6 +52,18 @@ class PermissionSeeder extends Seeder
             ['name' => 'them-moi-mon-hoc', 'display_name' => 'Thêm mới môn học', 'group' => 'quan-ly-mon-hoc'],
             ['name' => 'chinh-sua-mon-hoc', 'display_name' => 'Chỉnh sửa môn học', 'group' => 'quan-ly-mon-hoc'],
             ['name' => 'xoa-mon-hoc', 'display_name' => 'Xóa môn học', 'group' => 'quan-ly-mon-hoc'],
+            
+            // Quản lý điểm
+            ['name' => 'view-grades', 'display_name' => 'Xem danh sách điểm', 'group' => 'quan-ly-diem'],
+            ['name' => 'create-grades', 'display_name' => 'Thêm mới điểm', 'group' => 'quan-ly-diem'],
+            ['name' => 'edit-grades', 'display_name' => 'Chỉnh sửa điểm', 'group' => 'quan-ly-diem'],
+            ['name' => 'delete-grades', 'display_name' => 'Xóa điểm', 'group' => 'quan-ly-diem'],
+            
+            // Quản lý điểm danh
+            ['name' => 'view-attendances', 'display_name' => 'Xem danh sách điểm danh', 'group' => 'quan-ly-diem-danh'],
+            ['name' => 'create-attendances', 'display_name' => 'Thêm mới điểm danh', 'group' => 'quan-ly-diem-danh'],
+            ['name' => 'edit-attendances', 'display_name' => 'Chỉnh sửa điểm danh', 'group' => 'quan-ly-diem-danh'],
+            ['name' => 'delete-attendances', 'display_name' => 'Xóa điểm danh', 'group' => 'quan-ly-diem-danh'],
         ];
 
         foreach ($permissions as $permission) {

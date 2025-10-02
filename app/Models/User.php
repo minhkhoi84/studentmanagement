@@ -68,10 +68,23 @@ class User extends Authenticatable
         if ($this->role === 'admin' && $this->permissions()->count() === 0) {
             $defaultAdminPermissions = [
                 'truy-cap-he-thong', 'xem-danh-sach-sinh-vien', 'xem-danh-sach-khoa', 
-                'xem-danh-sach-lop', 'xem-danh-sach-mon-hoc', 'xem-danh-sach-thanh-vien'
+                'xem-danh-sach-lop', 'xem-danh-sach-mon-hoc', 'xem-danh-sach-thanh-vien',
+                'them-moi-khoa', 'chinh-sua-khoa', 'xoa-khoa'
             ];
             
             if (in_array($permission, $defaultAdminPermissions)) {
+                return true;
+            }
+        }
+        
+        // User thường chỉ có quyền xem mặc định (nếu chưa được phân quyền cụ thể)
+        if ($this->role === 'user' && $this->permissions()->count() === 0) {
+            $defaultUserPermissions = [
+                'truy-cap-he-thong', 'xem-danh-sach-sinh-vien', 'xem-danh-sach-khoa', 
+                'xem-danh-sach-lop', 'xem-danh-sach-mon-hoc', 'view-teachers', 'view-grades', 'view-attendances'
+            ];
+            
+            if (in_array($permission, $defaultUserPermissions)) {
                 return true;
             }
         }

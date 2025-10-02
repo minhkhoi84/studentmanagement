@@ -26,6 +26,12 @@
                                     <i class="fas fa-user-graduate fa-5x text-muted"></i>
                                 </div>
                                 <h5 class="mt-3 text-primary">Student ID: #{{ $student->id }}</h5>
+                                @if($student->student_code)
+                                <p class="text-info">
+                                    <i class="fas fa-id-card"></i> 
+                                    Mã SV: {{ $student->student_code }}
+                                </p>
+                                @endif
                                 <p class="text-muted">
                                     <i class="fas fa-calendar"></i> 
                                     Joined: {{ $student->created_at->format('M d, Y') }}
@@ -47,6 +53,40 @@
                                             <div class="info-value">{{ $student->name }}</div>
                                         </div>
                                         
+                                        @if($student->student_code)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-id-card text-info"></i> Student Code
+                                            </label>
+                                            <div class="info-value">
+                                                <span class="badge bg-info">{{ $student->student_code }}</span>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->date_of_birth)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-birthday-cake text-warning"></i> Date of Birth
+                                            </label>
+                                            <div class="info-value">
+                                                {{ $student->date_of_birth->format('d/m/Y') }}
+                                                @if($student->age)
+                                                <span class="text-muted">({{ $student->age }} tuổi)</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->gender)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-venus-mars text-pink"></i> Gender
+                                            </label>
+                                            <div class="info-value">{{ $student->gender_display }}</div>
+                                        </div>
+                                        @endif
+                                        
                                         <div class="info-item mb-3">
                                             <label class="info-label">
                                                 <i class="fas fa-phone text-success"></i> Mobile Number
@@ -63,6 +103,61 @@
                                     </div>
                                     
                                     <div class="col-md-6">
+                                        @if($student->email)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-envelope text-primary"></i> Email
+                                            </label>
+                                            <div class="info-value">
+                                                <a href="mailto:{{ $student->email }}" class="text-decoration-none">
+                                                    {{ $student->email }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->nationality)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-flag text-success"></i> Quê Quán
+                                            </label>
+                                            <div class="info-value">{{ $student->nationality }}</div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->class)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-graduation-cap text-info"></i> Class
+                                            </label>
+                                            <div class="info-value">
+                                                <span class="badge bg-secondary">{{ $student->class }}</span>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->major)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-book text-warning"></i> Major
+                                            </label>
+                                            <div class="info-value">{{ $student->major }}</div>
+                                        </div>
+                                        @endif
+                                        
+                                        @if($student->status)
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-info-circle text-info"></i> Status
+                                            </label>
+                                            <div class="info-value">
+                                                <span class="badge bg-{{ $student->status_badge_color }}">
+                                                    {{ ucfirst($student->status) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        
                                         <div class="info-item mb-3">
                                             <label class="info-label">
                                                 <i class="fas fa-calendar-plus text-info"></i> Registration Date
@@ -94,6 +189,77 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                @if($student->father_name || $student->mother_name)
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="text-primary mb-3">
+                                            <i class="fas fa-users"></i> Family Information
+                                        </h5>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    @if($student->father_name)
+                                    <div class="col-md-6">
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-male text-primary"></i> Father Name
+                                            </label>
+                                            <div class="info-value">{{ $student->father_name }}</div>
+                                            @if($student->father_phone)
+                                            <div class="text-muted small">
+                                                <i class="fas fa-phone"></i> {{ $student->father_phone }}
+                                            </div>
+                                            @endif
+                                            @if($student->father_occupation)
+                                            <div class="text-muted small">
+                                                <i class="fas fa-briefcase"></i> {{ $student->father_occupation }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    
+                                    @if($student->mother_name)
+                                    <div class="col-md-6">
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-female text-pink"></i> Mother Name
+                                            </label>
+                                            <div class="info-value">{{ $student->mother_name }}</div>
+                                            @if($student->mother_phone)
+                                            <div class="text-muted small">
+                                                <i class="fas fa-phone"></i> {{ $student->mother_phone }}
+                                            </div>
+                                            @endif
+                                            @if($student->mother_occupation)
+                                            <div class="text-muted small">
+                                                <i class="fas fa-briefcase"></i> {{ $student->mother_occupation }}
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                                @endif
+
+                                @if($student->notes)
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="info-item mb-3">
+                                            <label class="info-label">
+                                                <i class="fas fa-sticky-note text-warning"></i> Notes
+                                            </label>
+                                            <div class="info-value">
+                                                <div class="alert alert-light">
+                                                    {{ $student->notes }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

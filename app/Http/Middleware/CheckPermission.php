@@ -38,7 +38,7 @@ class CheckPermission
             }
 
             // Nếu không phải AJAX, redirect về trang chủ với thông báo lỗi
-            return redirect()->route('dashboard')->with('error', 'Bạn không có quyền thực hiện hành động này. Liên hệ quản trị viên để được cấp quyền.');
+            return redirect()->route('home')->with('error', 'Bạn không có quyền thực hiện hành động này. Liên hệ quản trị viên để được cấp quyền.');
         }
 
         return $next($request);

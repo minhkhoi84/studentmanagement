@@ -30,9 +30,13 @@ class TeacherController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'teacher_code' => 'required|string|max:50|unique:teachers,teacher_code',
             'email' => 'required|email:rfc,dns|max:255|unique:teachers,email',
             'phone' => ['nullable','string','max:20','regex:/^[0-9+\-\s()]{8,20}$/'],
+            'qualification' => 'nullable|string|max:255',
+            'nationality' => 'nullable|string|max:100',
             'department' => 'nullable|string|max:150',
+            'class_assigned' => 'nullable|string|max:50',
             'status' => 'nullable|in:active,inactive',
         ]);
         Teacher::create($validated);
@@ -48,9 +52,13 @@ class TeacherController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'teacher_code' => 'required|string|max:50|unique:teachers,teacher_code,' . $teacher->id,
             'email' => 'required|email:rfc,dns|max:255|unique:teachers,email,' . $teacher->id,
             'phone' => ['nullable','string','max:20','regex:/^[0-9+\-\s()]{8,20}$/'],
+            'qualification' => 'nullable|string|max:255',
+            'nationality' => 'nullable|string|max:100',
             'department' => 'nullable|string|max:150',
+            'class_assigned' => 'nullable|string|max:50',
             'status' => 'nullable|in:active,inactive',
         ]);
         $teacher->update($validated);

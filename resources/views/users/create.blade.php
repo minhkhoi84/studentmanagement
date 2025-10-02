@@ -43,7 +43,6 @@
                             @if(Auth::user()->role === 'super_admin')
                                 <option value="super_admin" {{ old('role')=='super_admin'?'selected':'' }}>Super Admin</option>
                             @endif
-                            <option value="admin" {{ old('role')=='admin'?'selected':'' }}>Admin</option>
                             <option value="user" {{ old('role')=='user'?'selected':'' }}>User</option>
                         </select>
                         @error('role')

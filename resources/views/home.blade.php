@@ -1,9 +1,4 @@
 @extends('layout')
-
-@push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
-@endpush
-
 @section('content')
 <div class="container-fluid">
     <!-- Welcome Header -->
@@ -120,37 +115,6 @@
                     </h5>
                 </div>
                 <div class="card-body">
-<<<<<<< Updated upstream
-                    @if(\App\Models\Student::count() > 0)
-                        <div class="activity-list">
-                            @foreach(\App\Models\Student::latest()->take(8)->get() as $student)
-                                <div class="activity-item">
-                                    <div class="activity-icon bg-primary">
-                                        <i class="fas fa-user-plus text-white"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <strong>{{ $student->name }}</strong> was added to the system
-                                        <br>
-                                        <small class="text-muted">{{ $student->created_at->diffForHumans() }}</small>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No recent activity</h5>
-                            <p class="text-muted">Start by adding your first student!</p>
-                            @auth
-                                @if(Auth::user()->hasPermission('them-moi-sinh-vien'))
-                                    <a href="{{ route('students.create') }}" class="btn btn-primary">
-                                        <i class="fas fa-plus"></i> Thêm sinh viên đầu tiên
-                                    </a>
-                                @endif
-                            @endauth
-                        </div>
-                    @endif
-=======
                     <div style="position: relative; height: 400px;">
                         <canvas id="attendanceChart"></canvas>
                     </div>
@@ -169,7 +133,6 @@
                     <div style="position: relative; height: 400px;">
                         <canvas id="gradeChart"></canvas>
                     </div>
->>>>>>> Stashed changes
                 </div>
             </div>
         </div>
