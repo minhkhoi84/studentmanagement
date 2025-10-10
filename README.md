@@ -37,7 +37,7 @@ studentmanagement/
 
 ### Backend
 - **Laravel 11** - PHP Framework
-- **SQLite** - Database
+- **Mysql** - Database
 - **Laravel Sanctum** - API Authentication
 
 ### Frontend
@@ -126,8 +126,7 @@ API endpoints có sẵn tại `/api/*`. Xem file `backend/routes/api.php` để 
 ## Phân quyền
 
 Hệ thống có các vai trò sau:
-- **Admin** - Toàn quyền quản lý hệ thống
-- **Teacher** - Quản lý sinh viên, điểm, điểm danh
+- **Admin** - Toàn quyền quản lý hệ thống (giảng viên cũng có thể dùng)
 - **Student** - Xem thông tin cá nhân
 
 ## License
