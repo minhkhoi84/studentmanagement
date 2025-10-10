@@ -115,9 +115,6 @@ Sau khi chạy seeder, bạn có thể đăng nhập với các tài khoản sau
   - Email: `admin@example.com`
   - Password: `password`
 
-- **Teacher**:
-  - Email: `teacher@example.com`
-  - Password: `password`
 
 ## API Documentation
 
