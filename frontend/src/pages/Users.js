@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
   Container,
@@ -29,21 +29,14 @@ import {
   DialogContent,
   DialogActions,
   Snackbar,
-  Tabs,
-  Tab,
   Avatar,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Checkbox,
   FormControlLabel,
   FormGroup,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-  Switch
+  AccordionDetails
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -53,11 +46,7 @@ import {
   FilterList as FilterIcon,
   Person as PersonIcon,
   AdminPanelSettings as AdminIcon,
-  PersonAdd as UserAddIcon,
   Security as SecurityIcon,
-  Visibility as ViewIcon,
-  Lock as LockIcon,
-  LockOpen as UnlockIcon,
   ExpandMore as ExpandMoreIcon,
   Group as GroupIcon,
   Shield as ShieldIcon
@@ -75,7 +64,6 @@ const Users = () => {
   const [openPermissionDialog, setOpenPermissionDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [tabValue, setTabValue] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -93,12 +81,7 @@ const Users = () => {
     permissions: []
   });
 
-  useEffect(() => {
-    fetchUsers();
-    fetchPermissions();
-  }, [searchTerm]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -114,9 +97,9 @@ const Users = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, roleFilter]);
 
-  const fetchPermissions = async () => {
+  const fetchPermissions = useCallback(async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/permissions');
       if (!response.ok) throw new Error('Failed to fetch permissions');
@@ -125,7 +108,12 @@ const Users = () => {
     } catch (err) {
       console.error('Error fetching permissions:', err);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchPermissions();
+  }, [fetchUsers, fetchPermissions]);
 
   const handleOpenDialog = (userData = null) => {
     if (userData) {
@@ -413,7 +401,7 @@ const Users = () => {
               <TextField
                 fullWidth
                 label="Tìm kiếm"
-                placeholder="Tên, email thành viên..."
+                placeholder="Tên, email, vai trò..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -429,7 +417,7 @@ const Users = () => {
                   label="Vai trò"
                   onChange={(e) => setRoleFilter(e.target.value)}
                 >
-                  <MenuItem value="">Tất cả vai trò</MenuItem>
+                  <MenuItem value="">Tất cả</MenuItem>
                   <MenuItem value="super_admin">Super Admin</MenuItem>
                   <MenuItem value="admin">Admin</MenuItem>
                   <MenuItem value="user">User</MenuItem>
@@ -437,13 +425,13 @@ const Users = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={3}>
-              <Box display="flex" gap={2}>
+              <Box display="flex" justifyContent="flex-end" gap={2}>
                 <Button
                   variant="outlined"
                   startIcon={<FilterIcon />}
                   onClick={fetchUsers}
                 >
-                  Áp dụng bộ lọc
+                  Lọc
                 </Button>
                 <Button
                   variant="outlined"
@@ -460,7 +448,7 @@ const Users = () => {
         </CardContent>
       </Card>
 
-      {/* Users List */}
+      {/* Users Table */}
       <Card>
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -475,7 +463,6 @@ const Users = () => {
                 <TableRow>
                   <TableCell>#</TableCell>
                   <TableCell>Thành viên</TableCell>
-                  <TableCell>Email</TableCell>
                   <TableCell>Vai trò</TableCell>
                   <TableCell>Quyền hạn</TableCell>
                   <TableCell>Ngày tạo</TableCell>
@@ -485,16 +472,10 @@ const Users = () => {
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-                      <Box textAlign="center">
-                        <GroupIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-                        <Typography variant="h6" color="text.secondary">
-                          Không tìm thấy thành viên nào
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Hãy thử thay đổi bộ lọc hoặc thêm thành viên mới
-                        </Typography>
-                      </Box>
+                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                      <Typography color="text.secondary">
+                        Không tìm thấy thành viên nào
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -504,23 +485,20 @@ const Users = () => {
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
-                            {getRoleIcon(user.role)}
+                            {user.name?.charAt(0).toUpperCase() || <PersonIcon />}
                           </Avatar>
                           <Box>
                             <Typography variant="subtitle2" fontWeight="bold">
                               {user.name}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
-                              ID: #{user.id}
+                              {user.email}
                             </Typography>
                           </Box>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">{user.email}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Chip 
+                        <Chip
                           icon={getRoleIcon(user.role)}
                           label={getRoleText(user.role)}
                           color={getRoleColor(user.role)}
@@ -528,49 +506,44 @@ const Users = () => {
                         />
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {user.permissions?.length || 0} quyền
-                        </Typography>
+                        {user.permissions && user.permissions.length > 0 ? (
+                          <Typography variant="body2">
+                            {user.permissions.map(p => p.name).join(', ')}
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2" color="text.secondary">
+                            Chưa được phân quyền
+                          </Typography>
+                        )}
                       </TableCell>
                       <TableCell>
                         {new Date(user.created_at).toLocaleDateString('vi-VN')}
                       </TableCell>
                       <TableCell align="center">
-                        <Box display="flex" gap={1} justifyContent="center">
-                          <IconButton
-                            size="small"
-                            color="info"
-                            onClick={() => handleOpenDialog(user)}
-                            title="Xem chi tiết"
-                          >
-                            <ViewIcon />
-                          </IconButton>
+                        <Box display="flex" justifyContent="center" gap={1}>
                           {(isSuperAdmin() || hasPermission('edit-users')) && (
                             <IconButton
                               size="small"
                               color="primary"
                               onClick={() => handleOpenDialog(user)}
-                              title="Chỉnh sửa"
                             >
                               <EditIcon />
                             </IconButton>
                           )}
-                          {(isSuperAdmin() || hasPermission('manage-permissions')) && (
+                          {(isSuperAdmin() || hasPermission('manage-user-permissions')) && (
                             <IconButton
                               size="small"
                               color="secondary"
                               onClick={() => handleOpenPermissionDialog(user)}
-                              title="Quản lý quyền"
                             >
                               <SecurityIcon />
                             </IconButton>
                           )}
-                          {(isSuperAdmin() || hasPermission('delete-users')) && (
+                          {isSuperAdmin() && (
                             <IconButton
                               size="small"
                               color="error"
                               onClick={() => handleDelete(user.id, user.name)}
-                              title="Xóa thành viên"
                             >
                               <DeleteIcon />
                             </IconButton>
@@ -586,41 +559,50 @@ const Users = () => {
         </CardContent>
       </Card>
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {editingUser ? 'Chỉnh sửa thành viên' : 'Thêm thành viên mới'}
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} sm={6}>
+      {/* User Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>{editingUser ? 'Chỉnh sửa thành viên' : 'Thêm thành viên mới'}</DialogTitle>
+        <DialogContent>
+          <Box component="form" sx={{ mt: 2 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Tên thành viên"
+                  label="Họ và tên"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Vai trò</InputLabel>
+                  <Select
+                    value={formData.role}
+                    label="Vai trò"
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  >
+                    <MenuItem value="super_admin">Super Admin</MenuItem>
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="user">User</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label={editingUser ? "Mật khẩu mới (để trống nếu không đổi)" : "Mật khẩu"}
+                  label="Mật khẩu"
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  required={!editingUser}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -630,79 +612,62 @@ const Users = () => {
                   type="password"
                   value={formData.password_confirmation}
                   onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
-                  required={!editingUser}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Vai trò</InputLabel>
-                  <Select
-                    value={formData.role}
-                    label="Vai trò"
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    required
-                  >
-                    <MenuItem value="user">User</MenuItem>
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="super_admin">Super Admin</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="h6" gutterBottom>
-                  Quyền hạn
-                </Typography>
-                {Object.entries(groupedPermissions).map(([group, groupPermissions]) => (
-                  <Accordion key={group}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography variant="subtitle1">{group}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <FormGroup>
-                        {groupPermissions.map((permission) => (
-                          <FormControlLabel
-                            key={permission.id}
-                            control={
-                              <Checkbox
-                                checked={formData.permissions.includes(permission.id)}
-                                onChange={(e) => handlePermissionChange(permission.id, e.target.checked)}
-                              />
-                            }
-                            label={permission.name}
-                          />
-                        ))}
-                      </FormGroup>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-              </Grid>
             </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Hủy</Button>
-            <Button type="submit" variant="contained">
-              {editingUser ? 'Cập nhật' : 'Tạo thành viên'}
-            </Button>
-          </DialogActions>
-        </form>
+
+            <Box mt={3}>
+              <Typography variant="subtitle1" gutterBottom>
+                Quyền hạn trực tiếp
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              {Object.entries(groupedPermissions).map(([group, groupPerms]) => (
+                <Accordion key={group} defaultExpanded>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{group}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <FormGroup>
+                      {groupPerms.map(permission => (
+                        <FormControlLabel
+                          key={permission.id}
+                          control={
+                            <Checkbox
+                              checked={formData.permissions.includes(permission.id)}
+                              onChange={(e) => handlePermissionChange(permission.id, e.target.checked)}
+                            />
+                          }
+                          label={permission.display_name || permission.name}
+                        />
+                      ))}
+                    </FormGroup>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleSubmit} variant="contained" color="primary">
+            {editingUser ? 'Cập nhật' : 'Tạo mới'}
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      {/* Permission Management Dialog */}
-      <Dialog open={openPermissionDialog} onClose={handleClosePermissionDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          Quản lý quyền hạn
-        </DialogTitle>
-        <form onSubmit={handlePermissionSubmit}>
-          <DialogContent>
-            {Object.entries(groupedPermissions).map(([group, groupPermissions]) => (
-              <Accordion key={group}>
+      {/* Permission Dialog */}
+      <Dialog open={openPermissionDialog} onClose={handleClosePermissionDialog} maxWidth="md" fullWidth>
+        <DialogTitle>Phân quyền chi tiết</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            {Object.entries(groupedPermissions).map(([group, groupPerms]) => (
+              <Accordion key={group} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="subtitle1">{group}</Typography>
+                  <Typography>{group}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <FormGroup>
-                    {groupPermissions.map((permission) => (
+                    {groupPerms.map(permission => (
                       <FormControlLabel
                         key={permission.id}
                         control={
@@ -711,36 +676,30 @@ const Users = () => {
                             onChange={(e) => handlePermissionFormChange(permission.id, e.target.checked)}
                           />
                         }
-                        label={permission.name}
+                        label={permission.display_name || permission.name}
                       />
                     ))}
                   </FormGroup>
                 </AccordionDetails>
               </Accordion>
             ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClosePermissionDialog}>Hủy</Button>
-            <Button type="submit" variant="contained">
-              Cập nhật quyền hạn
-            </Button>
-          </DialogActions>
-        </form>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePermissionDialog}>Hủy</Button>
+          <Button onClick={handlePermissionSubmit} variant="contained" color="primary">
+            Lưu thay đổi
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      {/* Snackbar for notifications */}
+      {/* Notification */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+        message={snackbar.message}
+      />
     </Container>
   );
 };
