@@ -37,7 +37,6 @@ import {
   Search as SearchIcon,
   Refresh as RefreshIcon,
   Assessment as AssessmentIcon,
-  School as SchoolIcon,
   Person as PersonIcon,
   Book as BookIcon,
   Grade as GradeIcon
@@ -69,7 +68,7 @@ const Grades = () => {
     fetchGrades();
     fetchStudents();
     fetchCourses();
-  }, [searchTerm]);
+  }, [searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchGrades = async () => {
     try {
@@ -406,66 +405,63 @@ const Grades = () => {
                       </TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
-                          <BookIcon sx={{ mr: 1, fontSize: 16, color: 'text.secondary' }} />
-                          <Typography variant="body2">
-                            {getCourseName(grade.course_id)}
+                          <BookIcon sx={{ mr: 2, color: 'secondary.main' }} />
+                          <Box>
+                            <Typography variant="subtitle2" fontWeight="bold">
+                              {getCourseName(grade.course_id)}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              ID: #{grade.course_id}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Chip
+                            icon={<GradeIcon />}
+                            label={grade.total_score}
+                            color={getGradeColor(grade.total_score)}
+                            size="small"
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            {getGradeText(grade.total_score)}
                           </Typography>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Box display="flex" alignItems="center">
-                          <Chip 
-                            label={`${parseFloat(grade.total_score || 0).toFixed(1)} - ${getGradeText(grade.total_score || 0)}`}
-                            color={getGradeColor(grade.total_score || 0)}
-                            size="small"
-                            icon={<GradeIcon />}
-                          />
-                        </Box>
+                        <Chip label={grade.semester} size="small" />
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {grade.semester || 'Chưa cập nhật'}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2">
-                          {grade.academic_year || 'Chưa cập nhật'}
-                        </Typography>
+                        <Chip label={grade.academic_year} size="small" variant="outlined" />
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
-                          {grade.notes ? 
-                            (grade.notes.length > 30 ? grade.notes.substring(0, 30) + '...' : grade.notes)
-                            : 'Không có'
-                          }
+                          {grade.notes || 'Không có ghi chú'}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         {new Date(grade.created_at).toLocaleDateString('vi-VN')}
                       </TableCell>
                       <TableCell align="center">
-                        <Box display="flex" gap={1} justifyContent="center">
-                          {(isSuperAdmin() || hasPermission('edit-grades')) && (
+                        {(isSuperAdmin() || hasPermission('edit-grades')) && (
+                          <>
                             <IconButton
                               size="small"
                               color="primary"
                               onClick={() => handleOpenDialog(grade)}
-                              title="Chỉnh sửa"
                             >
                               <EditIcon />
                             </IconButton>
-                          )}
-                          {(isSuperAdmin() || hasPermission('delete-grades')) && (
                             <IconButton
                               size="small"
                               color="error"
                               onClick={() => handleDelete(grade.id, getStudentName(grade.student_id), getCourseName(grade.course_id))}
-                              title="Xóa điểm"
                             >
                               <DeleteIcon />
                             </IconButton>
-                          )}
-                        </Box>
+                          </>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -476,45 +472,39 @@ const Grades = () => {
         </CardContent>
       </Card>
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {editingGrade ? 'Chỉnh sửa điểm' : 'Thêm điểm mới'}
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} sm={6}>
+      {/* Grade Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>{editingGrade ? 'Chỉnh sửa điểm' : 'Thêm điểm mới'}</DialogTitle>
+        <DialogContent>
+          <Box component="form" sx={{ mt: 2 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Sinh viên</InputLabel>
                   <Select
                     value={formData.student_id}
                     label="Sinh viên"
                     onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-                    required
                   >
-                    <MenuItem value="">Chọn sinh viên</MenuItem>
-                    {students.map((student) => (
+                    {students.map(student => (
                       <MenuItem key={student.id} value={student.id}>
-                        {student.name} - {student.student_code}
+                        {student.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Môn học</InputLabel>
                   <Select
                     value={formData.course_id}
                     label="Môn học"
                     onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
-                    required
                   >
-                    <MenuItem value="">Chọn môn học</MenuItem>
-                    {courses.map((course) => (
+                    {courses.map(course => (
                       <MenuItem key={course.id} value={course.id}>
-                        {course.name} - {course.code}
+                        {course.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -523,29 +513,19 @@ const Grades = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Điểm giữa kỳ *"
+                  label="Điểm giữa kỳ"
                   type="number"
-                  step="0.1"
-                  min="0"
-                  max="10"
                   value={formData.midterm_score}
                   onChange={(e) => setFormData({ ...formData, midterm_score: e.target.value })}
-                  required
-                  helperText="Điểm giữa kỳ (0-10)"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Điểm cuối kỳ *"
+                  label="Điểm cuối kỳ"
                   type="number"
-                  step="0.1"
-                  min="0"
-                  max="10"
                   value={formData.final_score}
                   onChange={(e) => setFormData({ ...formData, final_score: e.target.value })}
-                  required
-                  helperText="Điểm cuối kỳ (0-10)"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -554,8 +534,6 @@ const Grades = () => {
                   label="Học kỳ"
                   value={formData.semester}
                   onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-                  required
-                  placeholder="VD: 1, 2, 3"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -564,46 +542,36 @@ const Grades = () => {
                   label="Năm học"
                   value={formData.academic_year}
                   onChange={(e) => setFormData({ ...formData, academic_year: e.target.value })}
-                  required
-                  placeholder="VD: 2024-2025"
-                  inputProps={{ maxLength: 10 }}
-                  helperText="Tối đa 10 ký tự"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Ghi chú"
                   multiline
-                  rows={3}
+                  rows={2}
+                  label="Ghi chú"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 />
               </Grid>
             </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Hủy</Button>
-            <Button type="submit" variant="contained">
-              {editingGrade ? 'Cập nhật' : 'Tạo điểm'}
-            </Button>
-          </DialogActions>
-        </form>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleSubmit} variant="contained" color="primary">
+            {editingGrade ? 'Cập nhật' : 'Tạo mới'}
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      {/* Snackbar for notifications */}
+      {/* Notification */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+        message={snackbar.message}
+      />
     </Container>
   );
 };

@@ -18,10 +18,6 @@ import {
   CardContent,
   Grid,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   IconButton,
   Dialog,
   DialogTitle,
@@ -32,39 +28,25 @@ import {
   Tab,
   Avatar,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Checkbox,
   FormControlLabel,
   FormGroup,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Switch,
-  Badge,
   Tooltip
 } from '@mui/material';
 import {
-  Add as AddIcon,
   Edit as EditIcon,
-  Delete as DeleteIcon,
   Search as SearchIcon,
   FilterList as FilterIcon,
   Person as PersonIcon,
   AdminPanelSettings as AdminIcon,
   Security as SecurityIcon,
-  Visibility as ViewIcon,
   ExpandMore as ExpandMoreIcon,
   Group as GroupIcon,
-  Shield as ShieldIcon,
-  PersonAdd as PersonAddIcon,
   Assignment as AssignmentIcon,
-  CheckCircle as CheckCircleIcon,
-  Cancel as CancelIcon,
-  Info as InfoIcon,
-  Warning as WarningIcon
+  CheckCircle as CheckCircleIcon
 } from '@mui/icons-material';
 
 const Roles = () => {
@@ -229,6 +211,7 @@ const Roles = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleDelete = async (userId, userName) => {
     if (window.confirm(`Bạn có chắc muốn xóa người dùng "${userName}" không?`)) {
       try {
@@ -258,16 +241,19 @@ const Roles = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const getRoleIcon = (roleValue) => {
     const role = predefinedRoles.find(r => r.value === roleValue);
     return role ? role.icon : <PersonIcon />;
   };
 
+  // eslint-disable-next-line no-unused-vars
   const getRoleColor = (roleValue) => {
     const role = predefinedRoles.find(r => r.value === roleValue);
     return role ? role.color : 'default';
   };
 
+  // eslint-disable-next-line no-unused-vars
   const getRoleLabel = (roleValue) => {
     const role = predefinedRoles.find(r => r.value === roleValue);
     return role ? role.label : 'Không xác định';
@@ -410,53 +396,49 @@ const Roles = () => {
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">{role.description}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {role.description}
+                        </Typography>
                       </TableCell>
                       <TableCell>
-                        <Chip 
+                        <Chip
+                          icon={<SecurityIcon />}
                           label={`${getPermissionCount(role.value)} quyền`}
-                          color={role.color}
+                          color="primary"
                           size="small"
                         />
                       </TableCell>
                       <TableCell>
-                        <Badge badgeContent={getUsersByRole(role.value).length} color="primary">
-                          <Chip 
-                            icon={<GroupIcon />}
-                            label="thành viên"
-                            variant="outlined"
-                            size="small"
-                          />
-                        </Badge>
+                        <Chip
+                          icon={<GroupIcon />}
+                          label={`${getUsersByRole(role.value).length} thành viên`}
+                          color="secondary"
+                          size="small"
+                        />
                       </TableCell>
                       <TableCell align="center">
-                        <Box display="flex" gap={1} justifyContent="center">
-                          <Tooltip title="Xem chi tiết">
-                            <IconButton
-                              size="small"
-                              color="info"
-                              onClick={() => handleOpenDialog(role)}
-                            >
-                              <ViewIcon />
-                            </IconButton>
+                        <Box display="flex" justifyContent="center" gap={1}>
+                          <Tooltip title="Chỉnh sửa thông tin vai trò">
+                            <span>
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={() => handleOpenDialog(role)}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </span>
                           </Tooltip>
-                          <Tooltip title="Chỉnh sửa">
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={() => handleOpenDialog(role)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Quản lý quyền">
-                            <IconButton
-                              size="small"
-                              color="secondary"
-                              onClick={() => handleOpenPermissionDialog(role)}
-                            >
-                              <SecurityIcon />
-                            </IconButton>
+                          <Tooltip title="Phân quyền chi tiết">
+                            <span>
+                              <IconButton
+                                size="small"
+                                color="secondary"
+                                onClick={() => handleOpenPermissionDialog(role)}
+                              >
+                                <SecurityIcon />
+                              </IconButton>
+                            </span>
                           </Tooltip>
                         </Box>
                       </TableCell>
@@ -472,7 +454,7 @@ const Roles = () => {
         {tabValue === 1 && (
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Chi tiết quyền hạn theo vai trò
+              Phân quyền theo vai trò
             </Typography>
             <Grid container spacing={3}>
               {predefinedRoles.map((role) => (
@@ -484,31 +466,34 @@ const Roles = () => {
                           {role.icon}
                         </Avatar>
                         <Box>
-                          <Typography variant="h6">{role.label}</Typography>
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            {role.label}
+                          </Typography>
                           <Typography variant="body2" color="text.secondary">
                             {role.description}
                           </Typography>
                         </Box>
                       </Box>
-                      <Divider sx={{ my: 2 }} />
+                      <Divider sx={{ mb: 2 }} />
                       <Typography variant="subtitle2" gutterBottom>
-                        Quyền hạn:
+                        Quyền hạn mặc định
                       </Typography>
                       {role.permissions.includes('all') ? (
-                        <Chip 
+                        <Chip
                           icon={<CheckCircleIcon />}
-                          label="Tất cả quyền"
+                          label="Toàn quyền hệ thống"
                           color="success"
                           size="small"
                         />
                       ) : (
-                        <Box>
-                          {role.permissions.map((permission, index) => (
-                            <Chip 
-                              key={index}
-                              label={permission}
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {role.permissions.map((perm) => (
+                            <Chip
+                              key={perm}
+                              label={perm}
                               size="small"
-                              sx={{ mr: 1, mb: 1 }}
+                              color="primary"
+                              variant="outlined"
                             />
                           ))}
                         </Box>
@@ -525,150 +510,122 @@ const Roles = () => {
         {tabValue === 2 && (
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Thống kê vai trò
+              Thống kê vai trò trong hệ thống
             </Typography>
             <Grid container spacing={3}>
-              {predefinedRoles.map((role) => {
-                const usersInRole = getUsersByRole(role.value);
-                return (
-                  <Grid item xs={12} md={4} key={role.value}>
-                    <Card variant="outlined">
-                      <CardContent>
-                        <Box display="flex" alignItems="center" mb={2}>
-                          <Avatar sx={{ mr: 2, bgcolor: `${role.color}.main` }}>
-                            {role.icon}
-                          </Avatar>
-                          <Box>
-                            <Typography variant="h6">{role.label}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {usersInRole.length} thành viên
-                            </Typography>
-                          </Box>
-                        </Box>
-                        <Divider sx={{ my: 2 }} />
-                        <Typography variant="subtitle2" gutterBottom>
-                          Thành viên:
-                        </Typography>
-                        {usersInRole.length === 0 ? (
-                          <Typography variant="body2" color="text.secondary">
-                            Chưa có thành viên
+              {predefinedRoles.map((role) => (
+                <Grid item xs={12} md={4} key={role.value}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Box display="flex" alignItems="center" mb={2}>
+                        <Avatar sx={{ mr: 2, bgcolor: `${role.color}.main` }}>
+                          {role.icon}
+                        </Avatar>
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            {role.label}
                           </Typography>
-                        ) : (
-                          <List dense>
-                            {usersInRole.slice(0, 3).map((user) => (
-                              <ListItem key={user.id} disablePadding>
-                                <ListItemAvatar>
-                                  <Avatar sx={{ width: 24, height: 24 }}>
-                                    <PersonIcon fontSize="small" />
-                                  </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText 
-                                  primary={user.name}
-                                  secondary={user.email}
-                                  primaryTypographyProps={{ variant: 'body2' }}
-                                  secondaryTypographyProps={{ variant: 'caption' }}
-                                />
-                              </ListItem>
-                            ))}
-                            {usersInRole.length > 3 && (
-                              <ListItem disablePadding>
-                                <ListItemText 
-                                  primary={`+${usersInRole.length - 3} thành viên khác`}
-                                  primaryTypographyProps={{ variant: 'caption', color: 'text.secondary' }}
-                                />
-                              </ListItem>
-                            )}
-                          </List>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
+                          <Typography variant="body2" color="text.secondary">
+                            {role.description}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Divider sx={{ mb: 2 }} />
+                      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="body2" color="text.secondary">
+                          Số lượng thành viên
+                        </Typography>
+                        <Chip
+                          icon={<GroupIcon />}
+                          label={`${getUsersByRole(role.value).length} người`}
+                          size="small"
+                          color="primary"
+                        />
+                      </Box>
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="body2" color="text.secondary">
+                          Số quyền mặc định
+                        </Typography>
+                        <Chip
+                          icon={<SecurityIcon />}
+                          label={`${getPermissionCount(role.value)} quyền`}
+                          size="small"
+                          color="secondary"
+                        />
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           </CardContent>
         )}
       </Card>
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {editingRole ? 'Chỉnh sửa vai trò' : 'Thêm vai trò mới'}
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Tên vai trò"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Tên hiển thị"
-                  value={formData.display_name}
-                  onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Mô tả"
-                  multiline
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Hủy</Button>
-            <Button type="submit" variant="contained">
-              {editingRole ? 'Cập nhật' : 'Tạo vai trò'}
-            </Button>
-          </DialogActions>
-        </form>
+      {/* Edit Role Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>{editingRole ? 'Chỉnh sửa vai trò' : 'Thêm vai trò mới'}</DialogTitle>
+        <DialogContent>
+          <Box component="form" sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Tên hệ thống"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Tên hiển thị"
+              value={formData.display_name}
+              onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
+            />
+            <TextField
+              fullWidth
+              margin="normal"
+              label="Mô tả"
+              multiline
+              rows={3}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleSubmit} variant="contained" color="primary">
+            {editingRole ? 'Cập nhật' : 'Tạo mới'}
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      {/* Permission Management Dialog */}
-      <Dialog open={openPermissionDialog} onClose={handleClosePermissionDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>
-          Quản lý quyền hạn cho vai trò
-        </DialogTitle>
-        <form onSubmit={handlePermissionSubmit}>
-          <DialogContent>
-            {Object.entries(groupedPermissions).map(([group, groupPermissions]) => (
-              <Accordion key={group}>
+      {/* Permission Dialog */}
+      <Dialog open={openPermissionDialog} onClose={handleClosePermissionDialog} maxWidth="md" fullWidth>
+        <DialogTitle>Phân quyền chi tiết cho vai trò</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            {Object.entries(groupedPermissions).map(([group, groupPerms]) => (
+              <Accordion key={group} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="subtitle1">{group}</Typography>
+                  <Typography>{group}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <FormGroup>
-                    {groupPermissions.map((permission) => (
+                    {groupPerms.map(permission => (
                       <FormControlLabel
                         key={permission.id}
                         control={
                           <Checkbox
-                            checked={permissionFormData.permissions.includes(permission.name)}
+                            checked={permissionFormData.permissions.includes(permission.id)}
                             onChange={(e) => {
-                              if (e.target.checked) {
-                                setPermissionFormData(prev => ({
-                                  ...prev,
-                                  permissions: [...prev.permissions, permission.name]
-                                }));
-                              } else {
-                                setPermissionFormData(prev => ({
-                                  ...prev,
-                                  permissions: prev.permissions.filter(p => p !== permission.name)
-                                }));
-                              }
+                              const checked = e.target.checked;
+                              setPermissionFormData(prev => ({
+                                ...prev,
+                                permissions: checked
+                                  ? [...prev.permissions, permission.id]
+                                  : prev.permissions.filter(id => id !== permission.id)
+                              }));
                             }}
                           />
                         }
@@ -679,29 +636,23 @@ const Roles = () => {
                 </AccordionDetails>
               </Accordion>
             ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClosePermissionDialog}>Hủy</Button>
-            <Button type="submit" variant="contained">
-              Cập nhật quyền hạn
-            </Button>
-          </DialogActions>
-        </form>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePermissionDialog}>Hủy</Button>
+          <Button onClick={handlePermissionSubmit} variant="contained" color="primary">
+            Lưu thay đổi
+          </Button>
+        </DialogActions>
       </Dialog>
 
-      {/* Snackbar for notifications */}
+      {/* Notification */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+        message={snackbar.message}
+      />
     </Container>
   );
 };
