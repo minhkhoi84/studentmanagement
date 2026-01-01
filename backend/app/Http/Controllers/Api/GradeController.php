@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Grade;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -85,6 +86,21 @@ class GradeController extends Controller
         $grade = Grade::create($validated);
         $grade->load(['student', 'course', 'course.teacher']);
 
+        // Tạo thông báo cho admin
+        Notification::create([
+            'type' => 'grade_created',
+            'title' => 'Điểm mới được nhập',
+            'message' => "Điểm cho sinh viên {$grade->student->name} môn {$grade->course->name} vừa được nhập ({$grade->grade})",
+            'data' => [
+                'grade_id' => $grade->id,
+                'student_name' => $grade->student->name,
+                'course_name' => $grade->course->name,
+                'total_score' => $grade->total_score,
+                'grade' => $grade->grade,
+            ],
+            'user_id' => null,
+        ]);
+
         return response()->json($grade, 201);
     }
 
@@ -125,6 +141,21 @@ class GradeController extends Controller
 
         $grade->update($validated);
         $grade->load(['student', 'course', 'course.teacher']);
+
+        // Tạo thông báo cho admin
+        Notification::create([
+            'type' => 'grade_updated',
+            'title' => 'Điểm được cập nhật',
+            'message' => "Điểm của sinh viên {$grade->student->name} môn {$grade->course->name} đã được cập nhật ({$grade->grade})",
+            'data' => [
+                'grade_id' => $grade->id,
+                'student_name' => $grade->student->name,
+                'course_name' => $grade->course->name,
+                'total_score' => $grade->total_score,
+                'grade' => $grade->grade,
+            ],
+            'user_id' => null,
+        ]);
 
         return response()->json($grade);
     }

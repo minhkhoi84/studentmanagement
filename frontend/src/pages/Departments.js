@@ -24,6 +24,12 @@ import {
   NotificationSnackbar,
   ActionButtons
 } from '../components/common';
+import {
+  FieldRow,
+  fieldInputProps,
+  dialogPaperProps,
+  FormLayout
+} from '../components/common/FormFieldRow';
 
 const Departments = () => {
   const { isSuperAdmin } = useAuth();
@@ -266,49 +272,48 @@ const Departments = () => {
         onSubmit={handleSubmit}
         title={editingDepartment ? 'Chỉnh sửa khoa' : 'Thêm khoa mới'}
         submitText={editingDepartment ? 'Cập nhật' : 'Tạo mới'}
+        PaperProps={dialogPaperProps}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <FormLayout>
+          <FieldRow label="Tên khoa" required>
             <TextField
               fullWidth
-              label="Tên khoa"
-              required
+              {...fieldInputProps}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Mã khoa" required>
             <TextField
               fullWidth
-              label="Mã khoa"
-              required
+              {...fieldInputProps}
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Mô tả">
             <TextField
               fullWidth
+              {...fieldInputProps}
               multiline
               rows={3}
-              label="Mô tả"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Trạng thái">
             <TextField
               fullWidth
               select
-              label="Trạng thái"
+              {...fieldInputProps}
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             >
               <option value="active">Hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </TextField>
-          </Grid>
-        </Grid>
+          </FieldRow>
+        </FormLayout>
       </FormDialog>
 
       {/* Notification */}

@@ -885,7 +885,7 @@ const Attendance = () => {
         <DialogContent>
           <Box component="form" sx={{ mt: 2 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Môn học</InputLabel>
                   <Select
@@ -901,7 +901,7 @@ const Attendance = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12}>
                 <DatePicker
                   label="Ngày điểm danh"
                   value={bulkFormData.attendance_date}

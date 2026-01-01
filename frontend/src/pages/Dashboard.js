@@ -114,13 +114,13 @@ const Dashboard = () => {
   ];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 4, px: { xs: 2, sm: 3, md: 4 } }}>
       {/* Statistics Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={3} sx={{ mb: 4, justifyContent: 'center', alignItems: 'stretch' }}>
         {statCards.map((stat, index) => {
           const IconComponent = stat.icon;
           return (
-            <Grid item xs={12} sm={6} md={2.4} key={index}>
+            <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
               <Card
                 sx={{
                   bgcolor: stat.bgColor,
@@ -182,7 +182,7 @@ const Dashboard = () => {
       </Grid>
 
       {/* Charts Section */}
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ justifyContent: 'center', maxWidth: '1400px', margin: '0 auto' }}>
         {/* Biểu đồ thống kê lượng sinh viên nghỉ học */}
         <Grid item xs={12} md={6}>
           <Card

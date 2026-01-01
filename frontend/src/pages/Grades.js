@@ -510,7 +510,7 @@ const Grades = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Điểm giữa kỳ"
@@ -519,7 +519,7 @@ const Grades = () => {
                   onChange={(e) => setFormData({ ...formData, midterm_score: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Điểm cuối kỳ"
@@ -528,7 +528,7 @@ const Grades = () => {
                   onChange={(e) => setFormData({ ...formData, final_score: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Học kỳ"
@@ -536,7 +536,7 @@ const Grades = () => {
                   onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Năm học"

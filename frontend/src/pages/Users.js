@@ -596,7 +596,7 @@ const Users = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Mật khẩu"
@@ -605,7 +605,7 @@ const Users = () => {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Xác nhận mật khẩu"

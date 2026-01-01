@@ -28,6 +28,12 @@ import {
   NotificationSnackbar,
   ActionButtons
 } from '../components/common';
+import {
+  FieldRow,
+  fieldInputProps,
+  dialogPaperProps,
+  FormLayout
+} from '../components/common/FormFieldRow';
 
 const Teachers = () => {
   const { isSuperAdmin } = useAuth();
@@ -382,46 +388,39 @@ const Teachers = () => {
         onSubmit={handleSubmit}
         title={editingTeacher ? 'Chỉnh sửa giảng viên' : 'Thêm giảng viên mới'}
         submitText={editingTeacher ? 'Cập nhật' : 'Tạo mới'}
-        maxWidth="md"
+        PaperProps={dialogPaperProps}
       >
-        <Grid container spacing={2}>
+        <FormLayout>
           {photoPreview && (
-            <Grid item xs={12} display="flex" justifyContent="center">
-              <Avatar
-                src={photoPreview}
-                sx={{ width: 100, height: 100 }}
-              />
-            </Grid>
+            <Box display="flex" justifyContent="center">
+              <Avatar src={photoPreview} sx={{ width: 100, height: 100 }} />
+            </Box>
           )}
-          <Grid item xs={12}>
-            <Button variant="outlined" component="label" fullWidth>
-              {photoFile ? 'Đổi ảnh' : 'Tải ảnh lên'}
-              <input type="file" hidden accept="image/*" onChange={handlePhotoChange} />
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
+          <Button variant="outlined" component="label" fullWidth>
+            {photoFile ? 'Đổi ảnh' : 'Tải ảnh lên'}
+            <input type="file" hidden accept="image/*" onChange={handlePhotoChange} />
+          </Button>
+          <FieldRow label="Họ và tên" required>
             <TextField
               fullWidth
-              label="Họ và tên"
-              required
+              {...fieldInputProps}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </FieldRow>
+          <FieldRow label="Mã giảng viên" required>
             <TextField
               fullWidth
-              label="Mã giảng viên"
-              required
+              {...fieldInputProps}
               value={formData.teacher_code}
               onChange={(e) => setFormData({ ...formData, teacher_code: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </FieldRow>
+          <FieldRow label="Khoa">
             <TextField
               fullWidth
+              {...fieldInputProps}
               select
-              label="Khoa"
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
             >
@@ -432,55 +431,55 @@ const Teachers = () => {
                 </option>
               ))}
             </TextField>
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Trình độ chuyên môn">
             <TextField
               fullWidth
-              label="Trình độ chuyên môn"
+              {...fieldInputProps}
               value={formData.qualification}
               onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </FieldRow>
+          <FieldRow label="Email">
             <TextField
               fullWidth
+              {...fieldInputProps}
               type="email"
-              label="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </FieldRow>
+          <FieldRow label="Số điện thoại">
             <TextField
               fullWidth
-              label="Số điện thoại"
+              {...fieldInputProps}
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Địa chỉ">
             <TextField
               fullWidth
+              {...fieldInputProps}
               multiline
               rows={2}
-              label="Địa chỉ"
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Trạng thái">
             <TextField
               fullWidth
+              {...fieldInputProps}
               select
-              label="Trạng thái"
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             >
               <option value="active">Hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </TextField>
-          </Grid>
-        </Grid>
+          </FieldRow>
+        </FormLayout>
       </FormDialog>
 
       {/* Notification */}

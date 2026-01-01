@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Notification;
 
 class AuthController extends Controller
 {
@@ -37,6 +38,7 @@ class AuthController extends Controller
 
     /**
      * Register new user
+     * Note: All new registrations default to 'user' role for security
      */
     public function register(Request $request): JsonResponse
     {
@@ -44,14 +46,26 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:super_admin,user',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
+            'role' => 'user', // Always default to 'user' for security
+        ]);
+
+        // Tạo thông báo cho admin
+        Notification::create([
+            'type' => 'student_registered',
+            'title' => 'Tài khoản mới đăng ký',
+            'message' => "Người dùng {$user->name} ({$user->email}) vừa đăng ký tài khoản mới",
+            'data' => [
+                'user_id' => $user->id,
+                'user_name' => $user->name,
+                'user_email' => $user->email,
+            ],
+            'user_id' => null, // null = gửi cho tất cả admin
         ]);
 
         $token = $user->createToken('auth-token')->plainTextToken;

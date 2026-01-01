@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassModel;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -52,6 +53,20 @@ class ClassController extends Controller
         // Map code back to class_code for response
         $class->class_code = $class->code;
 
+        // Tạo thông báo cho admin
+        Notification::create([
+            'type' => 'class_created',
+            'title' => 'Lớp học mới',
+            'message' => "Lớp học {$class->name} ({$class->code}) vừa được tạo",
+            'data' => [
+                'class_id' => $class->id,
+                'class_name' => $class->name,
+                'class_code' => $class->code,
+                'department_name' => $class->department->name ?? null,
+            ],
+            'user_id' => null,
+        ]);
+
         return response()->json($class, 201);
     }
 
@@ -79,6 +94,20 @@ class ClassController extends Controller
         
         // Map code back to class_code for response
         $class->class_code = $class->code;
+
+        // Tạo thông báo cho admin
+        Notification::create([
+            'type' => 'class_updated',
+            'title' => 'Lớp học được cập nhật',
+            'message' => "Lớp học {$class->name} ({$class->code}) đã được cập nhật thông tin",
+            'data' => [
+                'class_id' => $class->id,
+                'class_name' => $class->name,
+                'class_code' => $class->code,
+                'department_name' => $class->department->name ?? null,
+            ],
+            'user_id' => null,
+        ]);
 
         return response()->json($class);
     }

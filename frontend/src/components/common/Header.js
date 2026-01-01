@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -8,26 +8,59 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  InputBase,
   Badge,
   Divider,
   ListItemIcon,
-  alpha
+  alpha,
+  CircularProgress
 } from '@mui/material';
 import {
-  Search as SearchIcon,
   Notifications as NotificationsIcon,
   AccountCircle,
   Logout as LogoutIcon,
   Settings as SettingsIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  CheckCircle as CheckCircleIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useApi } from '../../hooks/useApi';
 
 const Header = ({ onMenuClick, drawerWidth }) => {
   const { user, logout } = useAuth();
+  const { get, post } = useApi();
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchor, setNotificationAnchor] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
+
+  // Fetch notifications
+  const fetchNotifications = useCallback(async () => {
+    if (user?.role !== 'super_admin') return;
+    
+    setLoadingNotifications(true);
+    try {
+      const response = await get('notifications');
+      if (response) {
+        setNotifications(response.notifications || []);
+        setUnreadCount(response.unread_count || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }, [user, get]);
+
+  // Load notifications on mount and periodically
+  useEffect(() => {
+    fetchNotifications();
+    
+    // Auto refresh every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+    
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -50,6 +83,38 @@ const Header = ({ onMenuClick, drawerWidth }) => {
     logout();
   };
 
+  const handleMarkAsRead = async (notificationId) => {
+    try {
+      await post(`notifications/${notificationId}/read`);
+      await fetchNotifications();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await post('notifications/read-all');
+      await fetchNotifications();
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+    }
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const then = new Date(timestamp);
+    const diffMs = now - then;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Vừa xong';
+    if (diffMins < 60) return `${diffMins} phút trước`;
+    if (diffHours < 24) return `${diffHours} giờ trước`;
+    return `${diffDays} ngày trước`;
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -70,63 +135,22 @@ const Header = ({ onMenuClick, drawerWidth }) => {
           <MenuIcon />
         </IconButton>
 
-        {/* Search Bar */}
-        <Box
-          sx={{
-            position: 'relative',
-            borderRadius: '24px',
-            backgroundColor: alpha('#ffffff', 0.15),
-            '&:hover': {
-              backgroundColor: alpha('#ffffff', 0.25),
-            },
-            marginRight: 2,
-            marginLeft: 0,
-            width: { xs: '100%', sm: 'auto' },
-            flexGrow: { xs: 1, sm: 0 },
-          }}
-        >
-          <Box
-            sx={{
-              padding: '0 16px',
-              height: '100%',
-              position: 'absolute',
-              pointerEvents: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <SearchIcon />
-          </Box>
-          <InputBase
-            placeholder="Tìm kiếm..."
-            sx={{
-              color: 'inherit',
-              width: '100%',
-              '& .MuiInputBase-input': {
-                padding: '8px 8px 8px 0',
-                paddingLeft: `calc(1em + 32px)`,
-                transition: 'width 0.3s',
-                width: { xs: '100%', sm: '200px', md: '300px' },
-              },
-            }}
-          />
-        </Box>
-
         <Box sx={{ flexGrow: 1 }} />
 
         {/* Right side icons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {/* Notifications */}
-          <IconButton
-            size="large"
-            color="inherit"
-            onClick={handleNotificationOpen}
-          >
-            <Badge badgeContent={3} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          {user?.role === 'super_admin' && (
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={handleNotificationOpen}
+            >
+              <Badge badgeContent={unreadCount} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          )}
 
           {/* User Profile */}
           <Box
@@ -222,54 +246,83 @@ const Header = ({ onMenuClick, drawerWidth }) => {
           PaperProps={{
             sx: {
               mt: 1.5,
-              width: 320,
-              maxHeight: 400,
+              width: 360,
+              maxHeight: 500,
               borderRadius: 2,
               boxShadow: '0 4px 20px 0 rgba(0,0,0,.1)',
             },
           }}
         >
-          <Box sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ px: 2, py: 1.5, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="subtitle1" fontWeight={600}>
-              Thông báo
+              Thông báo ({unreadCount} chưa đọc)
             </Typography>
+            {unreadCount > 0 && (
+              <IconButton size="small" onClick={handleMarkAllAsRead} title="Đánh dấu tất cả đã đọc">
+                <CheckCircleIcon fontSize="small" />
+              </IconButton>
+            )}
           </Box>
-          <MenuItem onClick={handleNotificationClose}>
-            <Box>
-              <Typography variant="body2" fontWeight={500}>
-                Sinh viên mới đăng ký
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                2 phút trước
+          
+          {loadingNotifications ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress size={24} />
+            </Box>
+          ) : notifications.length === 0 ? (
+            <Box sx={{ px: 2, py: 4, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                Không có thông báo nào
               </Typography>
             </Box>
-          </MenuItem>
-          <MenuItem onClick={handleNotificationClose}>
-            <Box>
-              <Typography variant="body2" fontWeight={500}>
-                Cập nhật điểm mới
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                1 giờ trước
-              </Typography>
-            </Box>
-          </MenuItem>
-          <MenuItem onClick={handleNotificationClose}>
-            <Box>
-              <Typography variant="body2" fontWeight={500}>
-                Giảng viên mới được thêm
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                3 giờ trước
-              </Typography>
-            </Box>
-          </MenuItem>
-          <Divider />
-          <Box sx={{ px: 2, py: 1, textAlign: 'center' }}>
-            <Typography variant="body2" color="primary" sx={{ cursor: 'pointer' }}>
-              Xem tất cả thông báo
-            </Typography>
-          </Box>
+          ) : (
+            <>
+              {notifications.map((notification) => (
+                <MenuItem
+                  key={notification.id}
+                  onClick={() => {
+                    if (!notification.is_read) {
+                      handleMarkAsRead(notification.id);
+                    }
+                  }}
+                  sx={{
+                    backgroundColor: notification.is_read ? 'transparent' : alpha('#667eea', 0.08),
+                    '&:hover': {
+                      backgroundColor: notification.is_read ? 'rgba(0,0,0,0.04)' : alpha('#667eea', 0.12),
+                    },
+                    borderLeft: notification.is_read ? 'none' : '3px solid #667eea',
+                  }}
+                >
+                  <Box sx={{ width: '100%' }}>
+                    <Typography variant="body2" fontWeight={notification.is_read ? 400 : 600}>
+                      {notification.title}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                      {notification.message}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5, fontStyle: 'italic' }}>
+                      {formatTimeAgo(notification.created_at)}
+                    </Typography>
+                  </Box>
+                </MenuItem>
+              ))}
+            </>
+          )}
+          
+          {notifications.length > 0 && (
+            <>
+              <Divider />
+              <Box sx={{ px: 2, py: 1, textAlign: 'center' }}>
+                <Typography 
+                  variant="body2" 
+                  color="primary" 
+                  sx={{ cursor: 'pointer', fontWeight: 500 }}
+                  onClick={handleNotificationClose}
+                >
+                  Đóng
+                </Typography>
+              </Box>
+            </>
+          )}
         </Menu>
       </Toolbar>
     </AppBar>

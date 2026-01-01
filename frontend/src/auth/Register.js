@@ -9,13 +9,9 @@ import {
   Alert,
   CircularProgress,
   Link,
-  Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  Divider
 } from '@mui/material';
-import { PersonAdd as PersonAddIcon, Login as LoginIcon } from '@mui/icons-material';
+import { PersonAdd as PersonAddIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
@@ -146,26 +142,6 @@ const Register = () => {
               onChange={handleChange}
               disabled={loading}
             />
-            <FormControl
-              margin="normal"
-              fullWidth
-              required
-              disabled={loading}
-            >
-              <InputLabel id="role-label">Vai trò</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={formData.role}
-                label="Vai trò"
-                onChange={handleChange}
-              >
-                <MenuItem value="user">Người dùng</MenuItem>
-                <MenuItem value="admin">Quản trị viên</MenuItem>
-                <MenuItem value="teacher">Giảng viên</MenuItem>
-              </Select>
-            </FormControl>
             <TextField
               margin="normal"
               required

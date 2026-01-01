@@ -25,6 +25,12 @@ import {
   NotificationSnackbar,
   ActionButtons
 } from '../components/common';
+import {
+  FieldRow,
+  fieldInputProps,
+  dialogPaperProps,
+  FormLayout
+} from '../components/common/FormFieldRow';
 
 const Classes = () => {
   const { isSuperAdmin } = useAuth();
@@ -312,31 +318,30 @@ const Classes = () => {
         onSubmit={handleSubmit}
         title={editingClass ? 'Chỉnh sửa lớp' : 'Thêm lớp mới'}
         submitText={editingClass ? 'Cập nhật' : 'Tạo mới'}
+        PaperProps={dialogPaperProps}
       >
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <FormLayout>
+          <FieldRow label="Tên lớp" required>
             <TextField
               fullWidth
-              label="Tên lớp"
-              required
+              {...fieldInputProps}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Mã lớp" required>
             <TextField
               fullWidth
-              label="Mã lớp"
-              required
+              {...fieldInputProps}
               value={formData.class_code}
               onChange={(e) => setFormData({ ...formData, class_code: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Khoa">
             <TextField
               fullWidth
+              {...fieldInputProps}
               select
-              label="Khoa"
               value={formData.department_id}
               onChange={(e) => setFormData({ ...formData, department_id: e.target.value })}
             >
@@ -347,29 +352,29 @@ const Classes = () => {
                 </option>
               ))}
             </TextField>
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Số sinh viên tối đa">
             <TextField
               fullWidth
+              {...fieldInputProps}
               type="number"
-              label="Số sinh viên tối đa"
               value={formData.max_students}
               onChange={(e) => setFormData({ ...formData, max_students: e.target.value })}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </FieldRow>
+          <FieldRow label="Trạng thái">
             <TextField
               fullWidth
+              {...fieldInputProps}
               select
-              label="Trạng thái"
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             >
               <option value="active">Hoạt động</option>
               <option value="inactive">Không hoạt động</option>
             </TextField>
-          </Grid>
-        </Grid>
+          </FieldRow>
+        </FormLayout>
       </FormDialog>
 
       {/* Notification */}
